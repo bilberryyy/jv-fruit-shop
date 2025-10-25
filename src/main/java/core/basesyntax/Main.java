@@ -35,14 +35,16 @@ public class Main {
         operationHandlers.put(FruitTransaction.Operation.PURCHASE, new PurchaseOperationHandler());
         operationHandlers.put(FruitTransaction.Operation.RETURN, new ReturnOperationHandler());
         operationHandlers.put(FruitTransaction.Operation.SUPPLY, new SupplyOperationHandler());
-        OperationStrategy operationStrategy = new OperationStrategyImpl(operationHandlers);
+
+        Map<String, Integer> storage = new HashMap<>();
+        OperationStrategy operationStrategy = new OperationStrategyImpl(operationHandlers, storage);
 
         ShopService shopService = new ShopServiceImpl(operationStrategy);
         List<FruitTransaction> transactions = dataConverter.convertToTransaction(inputReport);
-        shopService.process(transactions);
+        Map<String, Integer> processedData = shopService.process(transactions);
 
         ReportGenerator reportGenerator = new ReportGeneratorImpl();
-        String resultingReport = reportGenerator.getReport();
+        String resultingReport = reportGenerator.getReport(processedData);
 
         WriterService writerService = new WriterServiceImpl();
         writerService.write(resultingReport, "src/main/resources/finalReport.csv");

@@ -1,14 +1,15 @@
 package core.basesyntax.strategy;
 
-import core.basesyntax.db.Storage;
 import core.basesyntax.model.FruitTransaction;
+import java.util.Map;
 
 public class SupplyOperationHandler implements OperationHandler {
     @Override
-    public void apply(FruitTransaction transaction) {
+    public void apply(FruitTransaction transaction,Map<String, Integer> storage) {
         String fruit = transaction.getFruit();
         int quantity = transaction.getQuantity();
 
-        Storage.fruits.put(fruit, Storage.fruits.getOrDefault(fruit,0) + quantity);
+        int current = storage.getOrDefault(fruit, 0);
+        storage.put(fruit, current + quantity);
     }
 }

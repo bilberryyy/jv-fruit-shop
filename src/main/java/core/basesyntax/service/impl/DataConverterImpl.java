@@ -18,6 +18,12 @@ public class DataConverterImpl implements DataConverter {
         for (String line : lines) {
             String[] parts = line.split(LINES_SEPARATOR);
 
+            if (parts.length != 3) {
+                throw new RuntimeException("Invalid CSV line: '"
+                        + line
+                        + "'. Expected 3 columns: type,fruit,quantity");
+            }
+
             FruitTransaction.Operation operation;
             try {
                 operation = FruitTransaction.Operation.getOperationByCode(parts[OPERATION_PART]);
