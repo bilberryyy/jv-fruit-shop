@@ -52,7 +52,7 @@ public class FruitTransaction {
         }
 
         public static Operation getOperationByCode(String letter) {
-            for (Operation operation : Operation.values()){
+            for (Operation operation : Operation.values()) {
                 if (operation.getCode().equals(letter)) {
                     return operation;
                 }
