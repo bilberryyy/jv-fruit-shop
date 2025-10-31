@@ -23,11 +23,11 @@ import java.util.List;
 import java.util.Map;
 
 public class Main {
+    private static final String INPUT_FILE_PATH = "src/main/resources/reportToRead.csv";
+    private static final String OUTPUT_FILE_PATH = "src/main/resources/finalReport.csv";
+
     public static void main(String[] args) {
         ReaderService readerService = new ReaderServiceImpl();
-        List<String> inputReport = readerService
-                .readFromFile("src/main/resources/reportToRead.csv");
-
         DataConverter dataConverter = new DataConverterImpl();
 
         Map<FruitTransaction.Operation, OperationHandler> operationHandlers = new HashMap<>();
@@ -40,13 +40,14 @@ public class Main {
         OperationStrategy operationStrategy = new OperationStrategyImpl(operationHandlers, storage);
 
         ShopService shopService = new ShopServiceImpl(operationStrategy);
-        List<FruitTransaction> transactions = dataConverter.convertToTransaction(inputReport);
+        List<FruitTransaction> transactions =
+                dataConverter.convertToTransaction(readerService.readFromFile(INPUT_FILE_PATH));
         Map<String, Integer> processedData = shopService.process(transactions);
 
         ReportGenerator reportGenerator = new ReportGeneratorImpl();
         String resultingReport = reportGenerator.getReport(processedData);
 
         WriterService writerService = new WriterServiceImpl();
-        writerService.write(resultingReport, "src/main/resources/finalReport.csv");
+        writerService.write(resultingReport, OUTPUT_FILE_PATH);
     }
 }
